@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-
-		5E555C0D2413F4C50049A1A2 /* VgsCollectReactNative.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* VgsCollectReactNative.m */; };
-		F4FF95D7245B92E800C19C63 /*  VgsCollectReactNative.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /*  VgsCollectReactNative.swift */; };
-
+		1F41003F2664D7680002C9D7 /* CollectorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F41003E2664D7680002C9D7 /* CollectorManager.swift */; };
+		1F4100412664D7E10002C9D7 /* CollectorManagerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4100402664D7E10002C9D7 /* CollectorManagerBridge.m */; };
+		1F4100442664D8010002C9D7 /* VgsCollectReactNativeViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4100422664D8010002C9D7 /* VgsCollectReactNativeViewManager.swift */; };
+		1F4100452664D8010002C9D7 /* VgsCollectReactNativeViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4100432664D8010002C9D7 /* VgsCollectReactNativeViewManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,11 +27,11 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libVgsCollectReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libVgsCollectReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
-
-		B3E7B5891CC2AC0600A0062D /* VgsCollectReactNative.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VgsCollectReactNative.m; sourceTree = "<group>"; };
+		1F41003E2664D7680002C9D7 /* CollectorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectorManager.swift; sourceTree = "<group>"; };
+		1F4100402664D7E10002C9D7 /* CollectorManagerBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectorManagerBridge.m; sourceTree = "<group>"; };
+		1F4100422664D8010002C9D7 /* VgsCollectReactNativeViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VgsCollectReactNativeViewManager.swift; sourceTree = "<group>"; };
+		1F4100432664D8010002C9D7 /* VgsCollectReactNativeViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VgsCollectReactNativeViewManager.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* VgsCollectReactNative-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VgsCollectReactNative-Bridging-Header.h"; sourceTree = "<group>"; };
-		F4FF95D6245B92E800C19C63 /* VgsCollectReactNative.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VgsCollectReactNative.swift; sourceTree = "<group>"; };
-
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,11 +56,11 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-
-				F4FF95D6245B92E800C19C63 /* VgsCollectReactNative.swift */,
-				B3E7B5891CC2AC0600A0062D /* VgsCollectReactNative.m */,
+				1F4100432664D8010002C9D7 /* VgsCollectReactNativeViewManager.m */,
+				1F4100422664D8010002C9D7 /* VgsCollectReactNativeViewManager.swift */,
+				1F4100402664D7E10002C9D7 /* CollectorManagerBridge.m */,
+				1F41003E2664D7680002C9D7 /* CollectorManager.swift */,
 				F4FF95D5245B92E700C19C63 /* VgsCollectReactNative-Bridging-Header.h */,
-
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -122,10 +122,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-
-				F4FF95D7245B92E800C19C63 /* VgsCollectReactNative.swift in Sources */,
-				B3E7B58A1CC2AC0600A0062D /* VgsCollectReactNative.m in Sources */,
-
+				1F4100452664D8010002C9D7 /* VgsCollectReactNativeViewManager.m in Sources */,
+				1F4100412664D7E10002C9D7 /* CollectorManagerBridge.m in Sources */,
+				1F41003F2664D7680002C9D7 /* CollectorManager.swift in Sources */,
+				1F4100442664D8010002C9D7 /* VgsCollectReactNativeViewManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,11 +238,9 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = VgsCollectReactNative;
 				SKIP_INSTALL = YES;
-
 				SWIFT_OBJC_BRIDGING_HEADER = "VgsCollectReactNative-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-
 			};
 			name = Debug;
 		};
@@ -259,10 +257,8 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = VgsCollectReactNative;
 				SKIP_INSTALL = YES;
-
 				SWIFT_OBJC_BRIDGING_HEADER = "VgsCollectReactNative-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-
 			};
 			name = Release;
 		};
