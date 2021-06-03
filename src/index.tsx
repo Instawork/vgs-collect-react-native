@@ -1,4 +1,9 @@
-import { requireNativeComponent, ViewStyle, NativeModules } from 'react-native';
+import {
+  requireNativeComponent,
+  ViewStyle,
+  NativeModules,
+  Platform,
+} from 'react-native';
 const { CollectorManager } = NativeModules;
 
 export type VGSEnvironment = 'sandbox' | 'live';
@@ -44,7 +49,30 @@ export function createCollector<TData = any>(
   return {
     collectorName: name,
     submit: async (path, method = 'POST', headers = {}) => {
-      return await CollectorManager.submit(name, path, method, headers);
+      const fn = Platform.select({
+        ios: () => CollectorManager.submit(name, path, method, headers),
+        android: () => {
+          return new Promise<{ code: number; data?: TData }>(
+            (resolve, reject) => {
+              CollectorManager.submit(
+                name,
+                path,
+                method,
+                headers,
+                (payload: any) => {
+                  if ('error' in payload) {
+                    reject(new Error(payload.error || payload.code));
+                  } else {
+                    resolve(payload);
+                  }
+                }
+              );
+            }
+          );
+        },
+      });
+
+      return fn!();
     },
   };
 }

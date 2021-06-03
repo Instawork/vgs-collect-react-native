@@ -45,7 +45,5 @@ class CollectorManager: NSObject {
               return
             }
         }
-        
-        
     }
 }

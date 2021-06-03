@@ -47,7 +47,9 @@ export default function App() {
             'Content-Type': 'application/vnd.api+json',
           })
             .then(console.log)
-            .catch(console.error);
+            .catch((e) => {
+              console.log('submit failed', e);
+            });
         }}
       >
         <Text>Click to send</Text>
