@@ -7,13 +7,14 @@ import {
 const { CollectorManager } = NativeModules;
 
 export type VGSEnvironment = 'sandbox' | 'live';
+export type Validation = { min: number; max: number } | { pattern: string };
 
 type VGSCollectInputProps = {
   config: {
     collectorName: string;
     fieldName: string;
     fieldType: 'cardHolderName' | 'expDate' | 'cvc' | 'cardNumber' | 'text';
-    validations?: [{ min: number; max: number } | { pattern: string }];
+    validations?: Validation[];
     formatPattern?: string;
     divider?: string;
     keyboardType?: 'numberPad' | 'default';
