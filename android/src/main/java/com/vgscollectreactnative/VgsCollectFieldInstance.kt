@@ -29,4 +29,5 @@ class VgsCollectFieldInstance(context: ReactContext) : LinearLayout(context) {
   fun setCardNumberField() {
     vgsField = VGSCardNumberEditText(context);
   }
+
 }

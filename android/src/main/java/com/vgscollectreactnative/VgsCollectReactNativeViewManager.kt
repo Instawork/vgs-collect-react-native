@@ -29,8 +29,11 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
     (view as VgsCollectFieldInstance).vgsField.setTextSize(TypedValue.COMPLEX_UNIT_PX, value)
   }
 
+  private var isSecureTextEntry: Boolean = false;
+
   @ReactProp(name = "isSecureTextEntry")
   fun setIsSecureTextEntry(view: View, value: Boolean) {
+    this.isSecureTextEntry = value;
     (view as VgsCollectFieldInstance).vgsField.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
   }
 
@@ -63,12 +66,16 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
 
     collectorName?.let { it ->
       initParams.getString("fieldType")?.let { fieldType ->
-        if (fieldType == "expDate") {
-          instance.setExpField();
-        } else if (fieldType == "cvc") {
-          instance.setCvvField();
-        } else if (fieldType == "cardNumber") {
-          instance.setCardNumberField();
+        when (fieldType) {
+            "expDate" -> {
+              instance.setExpField();
+            }
+            "cvc" -> {
+              instance.setCvvField();
+            }
+            "cardNumber" -> {
+              instance.setCardNumberField();
+            }
         }
       }
 
@@ -82,7 +89,11 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
 
       initParams.getString("keyboardType")?.let { keyboardType ->
         if (keyboardType === "numberPad") {
-          field.setInputType(InputType.TYPE_CLASS_NUMBER)
+          if (isSecureTextEntry) {
+            field.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD)
+          } else {
+            field.setInputType(InputType.TYPE_CLASS_NUMBER)
+          }
         }
       }
 
@@ -92,44 +103,45 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
         }
       }
 
-      initParams.getString("formatPattern")?.let { formatPattern ->
-        try {
-          (field as VGSEditText).setMaxLength(formatPattern.length)
-        } catch (e: Error) {
-
-        }
-      }
-
       initParams.getArray("validations")?.let { rawValidationsArray ->
-        if (!field.isValidationEnabled()) {
-          if (rawValidationsArray.size() > 0) {
-            field.enableValidation(true);
-          }
+        try {
+          val rule = VGSInfoRule.ValidationBuilder();
 
-          for (i in 0..rawValidationsArray.size()) {
+          for (i in rawValidationsArray.toArrayList().indices) {
             rawValidationsArray.getMap(i)?.let { rawValidation ->
-              System.out.println("VGSCollect rawValidation=$rawValidation");
               val max = rawValidation.getInt("max");
               val min = rawValidation.getInt("min");
               val pattern = rawValidation.getString("pattern");
 
-              System.out.println("VGSCollect rawValidation, max=$max, min=$min, pattern=$pattern");
+              pattern?.let {patternStr ->
+                rule.setRegex(patternStr);
+              }
 
-              if (pattern != null) {
-                val rule = VGSInfoRule.ValidationBuilder().setRegex(pattern).build()
-
-                try {
-                  (field as VGSEditText).addRule(rule)
-                } catch (e: Error) {}
-              } else if (min != null && max != null) {
-                val rule = VGSInfoRule.ValidationBuilder().setAllowableMinLength(min).setAllowableMaxLength(max).build()
-
-                try {
-                  (field as VGSEditText).addRule(rule)
-                } catch (e: Error) {}
+              (min != null && max != null && max > min && max > 0).run {
+                if (this) {
+                  rule.setAllowableMinLength(min).setAllowableMaxLength(max);
+                }
               }
             }
           }
+
+          (field as VGSEditText).addRule(rule.build())
+        } catch (e: Error) {
+          System.out.println("VGSCollect failed to set validations, error=$e");
+        }
+      }
+
+      (field as VGSEditText).setIsRequired(true);
+      field.setSingleLine(true);
+
+      initParams.getString("formatPattern")?.let { formatPattern ->
+        try {
+          System.out.println("VGSCollect formatPattern->setMaxLength to ${formatPattern.length}");
+
+          (field as VGSEditText).setMaxLength(formatPattern.length)
+        } catch (e: Error) {
+          System.out.println("VGSCollect failed to set formatPattern, error=$e");
+
         }
       }
     }

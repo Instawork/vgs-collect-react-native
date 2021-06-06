@@ -1,9 +1,12 @@
 package com.vgscollectreactnative
 
 import com.facebook.react.bridge.*
+import com.verygoodsecurity.vgscollect.VGSCollectLogger
+import com.verygoodsecurity.vgscollect.core.Environment
 import com.verygoodsecurity.vgscollect.core.HTTPMethod
 import com.verygoodsecurity.vgscollect.core.VGSCollect
 import com.verygoodsecurity.vgscollect.core.VgsCollectResponseListener
+import com.verygoodsecurity.vgscollect.core.model.network.VGSRequest
 import com.verygoodsecurity.vgscollect.core.model.network.VGSResponse
 
 
@@ -15,34 +18,66 @@ class CollectorManager internal constructor(context: ReactApplicationContext?) :
 
   @ReactMethod
   fun createNamedCollector(name: String, vaultId: String, environment: String) {
+    System.out.println("VGSCollect creating with: name=$name, vaultId=$vaultId, env=$environment");
+
     reactApplicationContext.currentActivity?.let {
-      map[name] = VGSCollect(it, vaultId, environment);
+      map[name] = VGSCollect(it, vaultId, if (environment == "sandbox") Environment.SANDBOX else Environment.LIVE);
+      System.out.println("VGSCollect created ACTIVITY with: name=$name, vaultId=$vaultId, env=$environment");
     }
   }
 
   @ReactMethod
   fun submit(name: String, path: String, method: String, headers: ReadableMap, callback: Callback) {
-    System.out.println("VGSCollect wrapper triggered submit, name=$name, path=$path, method=$method, headers=$headers");
+    VGSCollectLogger.logLevel = VGSCollectLogger.Level.WARN;
+    System.out.println("VGSCollect wrapper triggered submit, name=$name, path=$path, method=$method");
 
     map[name]?.let {
+      val requestBuilder = VGSRequest.VGSRequestBuilder();
       val methodObj = if (method == "GET") HTTPMethod.GET else HTTPMethod.POST;
+      requestBuilder.setMethod(methodObj);
+      requestBuilder.setPath(path);
 
-      when(val response = it.submit(path, methodObj)) {
-        is VGSResponse.SuccessResponse -> {
-          System.out.println("VGSCollect success response=$response");
-          val map = Arguments.createMap();
-          map.putInt("code", response.successCode);
-          map.putString("data", response.body);
-          callback.invoke(map);
+      headers?.let { headersRaw ->
+        val iterator = headersRaw.keySetIterator();
+        val map = mutableMapOf<String, String>();
+
+        while (iterator.hasNextKey()) {
+          val key = iterator.nextKey();
+          val value = headersRaw.getString(key);
+
+          if (value != null) {
+            map[key] = value
+          };
         }
-        is VGSResponse.ErrorResponse -> {
-          System.out.println("VGSCollect error response=$response");
-          val map = Arguments.createMap();
-          map.putInt("code", response.errorCode);
-          map.putString("error", response.localizeMessage);
-          callback.invoke(map);
-        }
+
+        requestBuilder.setCustomHeader(map)
       }
+
+      it.clearResponseListeners();
+      it.addOnResponseListeners(object : VgsCollectResponseListener {
+        override fun onResponse(response: VGSResponse?) {
+          System.out.println("VGSCollect response=$response");
+
+          when(response) {
+            is VGSResponse.SuccessResponse -> {
+              System.out.println("VGSCollect success response=$response");
+              val map = Arguments.createMap();
+              map.putInt("code", response.successCode);
+              map.putString("data", response.body);
+              callback.invoke(map);
+            }
+            is VGSResponse.ErrorResponse -> {
+              System.out.println("VGSCollect error response=$response");
+              val map = Arguments.createMap();
+              map.putInt("code", response.errorCode);
+              map.putString("error", response.localizeMessage);
+              callback.invoke(map);
+            }
+          }
+        }
+      });
+
+      it.asyncSubmit(requestBuilder.build());
     }
   }
 

@@ -4,7 +4,11 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { createCollector, VGSCollectInput } from 'vgs-collect-react-native';
 
 export default function App() {
-  const { submit, collectorName } = createCollector('tntazhyknp1', 'sandbox');
+  const { submit, collectorName } = createCollector(
+    'tntazhyknp1',
+    'sandbox',
+    'example-form'
+  );
 
   return (
     <View style={styles.container}>
@@ -41,9 +45,9 @@ export default function App() {
       /> */}
       <TouchableOpacity
         onPress={() => {
-          submit('/cards/4073/secure-data/pin', 'POST', {
+          submit('/cards/2253/secure-data/pin', 'POST', {
             'Authorization':
-              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzI1MTI4L2RvdGFuc2ltaGFAZ21haWwuY29tIiwiZXhwIjoiMjAyMS0wNi0wMVQxMjo1MzowNC4xODZaIiwianRpIjpudWxsLCJvcmdJZCI6bnVsbCwic2NvcGUiOiJjYXJkcy1zZW5zaXRpdmUtd3JpdGUiLCJjdXN0b21lcklkIjoiMjUxMjgifaZfeTHZdSebasPXfbxzLcViCcjmU487koS_4OSNHQA8Q3tcU_jTQCze3rRIW_kJGd_mMvpvdBPd0cbW5sa7UAs',
+              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzE4NTUzL2RvdGFuc2ltaGFAZ21haWwuY29tIiwiZXhwIjoiMjAyMS0wNi0wN1QxMzo1NDo1MS44MzJaIiwianRpIjpudWxsLCJvcmdJZCI6bnVsbCwic2NvcGUiOiJjYXJkcy1zZW5zaXRpdmUtd3JpdGUiLCJjdXN0b21lcklkIjoiMTg1NTMifRR8Cn9ORJdX1F66znPbn0im1hu4bO4QX9uOhvdyxTddmn5sfuLotf0hHdmw2tx63p1A0f-gSz8uqg0NIpOaswg',
             'Content-Type': 'application/vnd.api+json',
           })
             .then(console.log)
