@@ -63,7 +63,14 @@ export function createCollector<TData = any>(
                   if ('error' in payload) {
                     reject(new Error(payload.error || payload.code));
                   } else {
-                    resolve(payload);
+                    resolve(
+                      typeof payload.data === 'string'
+                        ? {
+                            ...payload,
+                            data: JSON.parse(payload.data),
+                          }
+                        : payload
+                    );
                   }
                 }
               );
