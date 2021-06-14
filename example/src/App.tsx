@@ -15,44 +15,38 @@ export default function App() {
       <VGSCollectInput
         config={{
           collectorName,
-          fieldName: 'data.attributes.pin',
-          fieldType: 'text',
-          validations: [{ min: 4, max: 6 }],
-          formatPattern: '####',
-          divider: '__',
-          keyboardType: 'numberPad',
+          fieldName: 'data.attributes.cvv2',
+          fieldType: 'cvc',
         }}
         fontSize={30}
-        placeholder={'test'}
+        placeholder={'CVC'}
         isSecureTextEntry={true}
-        style={styles.box}
-      />
-      {/* <VGSCollectInput
-        config={{
-          collectorName: COLLECTOR_NAME,
-          fieldName: 'field.exp',
-          fieldType: 'expDate',
-        }}
         style={styles.box}
       />
       <VGSCollectInput
         config={{
-          collectorName: COLLECTOR_NAME,
-          fieldName: 'field.cvv',
-          fieldType: 'cvc',
+          collectorName,
+          fieldName: 'data.attributes.expirationDate',
+          fieldType: 'expDate',
+          formatPattern: '####-##',
         }}
+        fontSize={30}
+        placeholder={'YYYY-MM'}
+        isSecureTextEntry={false}
         style={styles.box}
-      /> */}
+      />
       <TouchableOpacity
         onPress={() => {
-          submit('/cards/2253/secure-data/pin', 'POST', {
+          submit('/cards/2000/activate', 'POST', {
             'Authorization':
-              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzE4NTUzL2RvdGFuc2ltaGFAZ21haWwuY29tIiwiZXhwIjoiMjAyMS0wNi0wN1QxMzo1NDo1MS44MzJaIiwianRpIjpudWxsLCJvcmdJZCI6bnVsbCwic2NvcGUiOiJjYXJkcy1zZW5zaXRpdmUtd3JpdGUiLCJjdXN0b21lcklkIjoiMTg1NTMifRR8Cn9ORJdX1F66znPbn0im1hu4bO4QX9uOhvdyxTddmn5sfuLotf0hHdmw2tx63p1A0f-gSz8uqg0NIpOaswg',
+              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzE4NTUzL2RvdGFuc2ltaGFAZ21haWwuY29tIiwiZXhwIjoiMjAyMS0wNi0xNVQwODozNDowMi43MjlaIiwianRpIjpudWxsLCJvcmdJZCI6bnVsbCwic2NvcGUiOiJjYXJkcy1zZW5zaXRpdmUtd3JpdGUiLCJjdXN0b21lcklkIjoiMTg1NTMifVknUOifijp3Zwos9_FdF4ZLTTiLXDXaVx-yqgLnUUjJ7MsJ8ADEuu5bb5mdju5qwuuufwTXMmrvNdzxkU93nQc',
             'Content-Type': 'application/vnd.api+json',
           })
-            .then(console.log)
+            .then((r) => {
+              console.log('submit done, unit response', r);
+            })
             .catch((e) => {
-              console.log('submit failed', e);
+              console.error('submit failed', e);
             });
         }}
       >
@@ -69,10 +63,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   box: {
-    width: 100,
-    borderColor: 'red',
+    width: 200,
+    borderColor: 'gray',
     borderWidth: 1,
-    backgroundColor: 'red',
     height: 50,
     marginVertical: 20,
   },

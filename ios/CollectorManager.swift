@@ -34,12 +34,12 @@ class CollectorManager: NSObject {
             switch response {
               case .success(let code, let data, let response):
                 let jsonData = data != nil ? try? JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] : nil;
-                print("success, code= \(code), data: \(jsonData), response: \(response)");
+                print("VGS Collect done! code= \(code), data: \(jsonData), response: \(response)");
                 resolve(["code": code, "data": jsonData, "response": response ]);
                 
                 return
-              case .failure(let code, _, _, let error):
-                print("Input data is not valid. Details:\n \(code) \(error)")
+              case .failure(let code, let data, let response, let error):
+                print("VGS Collect failed! Details:\n code = \(code) data = \(data) response = \(response)) error = \(error)")
                 reject("error", error?.localizedDescription, error ?? NSError(domain: "VGSCollectError", code: code));
                 
               return

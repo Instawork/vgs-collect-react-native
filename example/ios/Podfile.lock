@@ -305,7 +305,7 @@ PODS:
     - React-Core (= 0.63.4)
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
-  - vgs-collect-react-native (0.0.5):
+  - vgs-collect-react-native (0.0.9):
     - React-Core
     - VGSCollectSDK
   - VGSCollectSDK (1.7.13):
@@ -474,7 +474,7 @@ SPEC CHECKSUMS:
   React-RCTText: 5c51df3f08cb9dedc6e790161195d12bac06101c
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
-  vgs-collect-react-native: 879d293ee9b7032ce64606c0b7c2784144588def
+  vgs-collect-react-native: fadee827fccf6a97a0bf06350ca34603c746bec7
   VGSCollectSDK: 10fc834bcf00a6e62c7add608b59033a0aaf71a1
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
