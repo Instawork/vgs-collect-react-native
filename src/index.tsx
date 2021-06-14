@@ -17,6 +17,16 @@ type VGSCollectInputProps = {
     validations?: Validation[];
     formatPattern?: string;
     divider?: string;
+    inputDateFormat?:
+      | 'shortYear'
+      | 'longYear'
+      | 'shortYearThenMonth'
+      | 'longYearThenMonth';
+    outputDateFormat?:
+      | 'shortYear'
+      | 'longYear'
+      | 'shortYearThenMonth'
+      | 'longYearThenMonth';
     keyboardType?: 'numberPad' | 'default';
   };
   isSecureTextEntry?: boolean;

@@ -28,10 +28,13 @@ export default function App() {
           collectorName,
           fieldName: 'data.attributes.expirationDate',
           fieldType: 'expDate',
-          formatPattern: '####-##',
+          divider: '-',
+          inputDateFormat: 'shortYear',
+          outputDateFormat: 'longYearThenMonth',
+          formatPattern: '##-##',
         }}
         fontSize={30}
-        placeholder={'YYYY-MM'}
+        placeholder={'MM-YY'}
         isSecureTextEntry={false}
         style={styles.box}
       />

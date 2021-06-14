@@ -10,11 +10,10 @@ class VgsCollectReactNativeViewManager: RCTViewManager {
 } 
 
 class VgsCollectReactNativeView : UIView {
-    let textField = VGSTextField()
+    var textField: VGSTextField?;
     
     override init(frame: CGRect) {
          super.init(frame: frame)
-         createVgsCollect();
      }
      
      required init?(coder aDecoder: NSCoder) {
@@ -22,7 +21,8 @@ class VgsCollectReactNativeView : UIView {
      }
     
     private func createVgsCollect() {
-        let stackView = UIStackView.init(arrangedSubviews: [textField])
+      if (textField != nil) {
+        let stackView = UIStackView.init(arrangedSubviews: [textField!])
          stackView.axis = .vertical
          
          stackView.distribution = .fill
@@ -36,7 +36,8 @@ class VgsCollectReactNativeView : UIView {
              stackView.heightAnchor.constraint(equalTo: self.heightAnchor)
          ])
         
-        textField.borderColor = .clear;
+        textField!.borderColor = .clear;
+      }
     }
 
     @objc var config: NSDictionary = NSDictionary() {
@@ -47,7 +48,54 @@ class VgsCollectReactNativeView : UIView {
             if (collector != nil) {
                 let fieldName = config["fieldName"] as! String;
                 let fieldType = config["fieldType"] as! String;
-                let configuration = VGSConfiguration(collector: collector!, fieldName: fieldName);
+                var configuration: VGSConfiguration;
+                
+                if (fieldType == "expDate") {
+                  textField = VGSExpDateTextField()
+                  configuration = VGSExpDateConfiguration(collector: collector!, fieldName: fieldName);
+                  configuration.type = .expDate
+                
+                    let inputDateFormat = config["inputDateFormat"] as! String;
+                    
+                    if (inputDateFormat == "longYear") {
+                        (configuration as! VGSExpDateConfiguration).inputDateFormat = .longYear;
+                    } else if (inputDateFormat == "shortYear") {
+                        (configuration as! VGSExpDateConfiguration).inputDateFormat = .shortYear;
+                    } else if (inputDateFormat == "shortYearThenMonth") {
+                        (configuration as! VGSExpDateConfiguration).inputDateFormat = .shortYearThenMonth;
+                    } else if (inputDateFormat == "longYearThenMonth") {
+                       (configuration as! VGSExpDateConfiguration).inputDateFormat = .longYearThenMonth;
+                    }
+                    
+                    let outputDateFormat = config["outputDateFormat"] as! String;
+                    
+                    if (outputDateFormat == "longYear") {
+                        (configuration as! VGSExpDateConfiguration).outputDateFormat = .longYear;
+                    } else if (outputDateFormat == "shortYear") {
+                        (configuration as! VGSExpDateConfiguration).outputDateFormat = .shortYear;
+                    } else if (outputDateFormat == "shortYearThenMonth") {
+                        (configuration as! VGSExpDateConfiguration).outputDateFormat = .shortYearThenMonth;
+                    } else if (outputDateFormat == "longYearThenMonth") {
+                       (configuration as! VGSExpDateConfiguration).outputDateFormat = .longYearThenMonth;
+                    }
+                } else {
+                    configuration = VGSConfiguration(collector: collector!, fieldName: fieldName);
+                    
+                    if (fieldType == "cardHolderName") {
+                        textField = VGSTextField()
+                        configuration.type = .cardHolderName;
+                    } else if (fieldType == "cvc") {
+                        textField = VGSCVCTextField()
+                        configuration.type = .cvc;
+                    } else if (fieldType == "cardNumber") {
+                        textField = VGSCardTextField()
+                        configuration.type = .cardNumber
+                    } else {
+                        textField = VGSTextField()
+                        configuration.type = .none
+                    }
+                }
+            
 
                 let formatPattern = config["formatPattern"] as? String;
                 if (formatPattern != nil) {
@@ -65,18 +113,6 @@ class VgsCollectReactNativeView : UIView {
                     configuration.keyboardType = .numberPad
                 }
 
-                if (fieldType == "cardHolderName") {
-                  configuration.type = .cardHolderName
-                } else if (fieldType == "expDate") {
-                  configuration.type = .expDate
-                } else if (fieldType == "cvc") {
-                  configuration.type = .cvc
-                } else if (fieldType == "cardNumber") {
-                  configuration.type = .cardNumber
-                } else {
-                  configuration.type = .none
-                }
-                
                 let rawValidations = config["validations"] as? NSArray;
                 var rules = [VGSValidationRuleProtocol]()
                 
@@ -99,33 +135,47 @@ class VgsCollectReactNativeView : UIView {
                     configuration.isRequiredValidOnly = true;
                 }
 
-                textField.configuration = configuration;
+                textField!.configuration = configuration;
+                self.fontFamily = { self.fontFamily }()
+                self.textColor = { self.textColor }()
+                self.placeholder = { self.placeholder }()
+                self.isSecureTextEntry = { self.isSecureTextEntry }()
+                self.fontSize = { self.fontSize }();
+                createVgsCollect()
             }
         }
     }
 
     @objc var fontFamily: String = "" {
         didSet {
-            let font = UIFont.init(name: fontFamily, size: fontSize);
-            textField.font = font;
+            if (textField != nil) {
+                let font = UIFont.init(name: fontFamily, size: fontSize);
+                textField!.font = font;
+            }
         }
     }
     
     @objc var textColor: String = "" {
          didSet {
-            textField.textColor = hexStringToUIColor(hex: textColor)
+            if (textField != nil) {
+                textField!.textColor = hexStringToUIColor(hex: textColor);
+            }
          }
     }
     
     @objc var placeholder: String = "" {
         didSet {
-            textField.placeholder = placeholder;
+            if (textField != nil) {
+                textField!.placeholder = placeholder;
+            }
         }
     }
     
     @objc var isSecureTextEntry: Bool = false {
         didSet {
-            textField.isSecureTextEntry = isSecureTextEntry;
+            if (textField != nil) {
+                textField!.isSecureTextEntry = isSecureTextEntry;
+            }
         }
     }
     
@@ -139,7 +189,9 @@ class VgsCollectReactNativeView : UIView {
                 font = UIFont.init(name: fontFamily, size: fontSize);
             }
             
-            textField.font = font;
+            if (textField != nil) {
+                textField!.font = font;
+            }
         }
     }
 
