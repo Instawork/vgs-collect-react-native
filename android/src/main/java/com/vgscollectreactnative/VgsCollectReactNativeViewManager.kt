@@ -97,12 +97,6 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
         }
       }
 
-      initParams.getString("keyboardType")?.let { keyboardType ->
-        if (keyboardType === "numberPad") {
-          field.setMaxLines(InputType.TYPE_CLASS_NUMBER)
-        }
-      }
-
       initParams.getArray("validations")?.let { rawValidationsArray ->
         try {
           val rule = VGSInfoRule.ValidationBuilder();
@@ -131,7 +125,7 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
         }
       }
 
-      (field as VGSEditText).setIsRequired(true);
+      field.setIsRequired(true);
       field.setSingleLine(true);
 
       initParams.getString("formatPattern")?.let { formatPattern ->
