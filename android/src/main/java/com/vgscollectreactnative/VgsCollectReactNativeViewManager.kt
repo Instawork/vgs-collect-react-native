@@ -14,6 +14,11 @@ import com.verygoodsecurity.vgscollect.view.card.validation.rules.VGSInfoRule
 import com.verygoodsecurity.vgscollect.view.card.validation.rules.ValidationRule
 import com.verygoodsecurity.vgscollect.widget.VGSEditText
 
+
+import com.verygoodsecurity.vgscollect.widget.VGSCardNumberEditText
+import com.verygoodsecurity.vgscollect.widget.ExpirationDateEditText
+
+
 class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
   override fun getName() = "VgsCollectReactNativeView"
   private lateinit var reactContext: ThemedReactContext;
@@ -25,7 +30,7 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
   }
 
   @ReactProp(name = "fontSize")
-  fun setFontSize(view: View, value: Float) {
+  fun setFontSize(view: View, value: Float = 16.toFloat()) {
     (view as VgsCollectFieldInstance).vgsField.setTextSize(TypedValue.COMPLEX_UNIT_PX, value)
   }
 
@@ -66,20 +71,50 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
 
     collectorName?.let { it ->
       initParams.getString("fieldType")?.let { fieldType ->
-        when (fieldType) {
-            "expDate" -> {
-              instance.setExpField();
+        System.out.println("========================================type $fieldType");
+        if (fieldType == "expDate") {
+          System.out.println("========================================got exp input");
+          instance.setExpField();
+          initParams.getString("inputDateFormat")?.let { inputDateFormat ->
+            if (inputDateFormat == "longYear") {
+              (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yyyy");
+            } else if (inputDateFormat == "shortYear") {
+              
+              (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yy");
+            } else if (inputDateFormat == "shortYearThenMonth") {
+              (instance.vgsField as ExpirationDateEditText).setDateRegex("yyyy/MM");
+            } else if (inputDateFormat == "longYearThenMonth") {
+              (instance.vgsField as ExpirationDateEditText).setDateRegex("yy/MM");
             }
-            "cvc" -> {
-              instance.setCvvField();
+          }
+
+          initParams.getString("outputDateFormat")?.let { outputDateFormat ->
+            if (outputDateFormat == "longYear") {
+              (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yyyy");
+            } else if (outputDateFormat == "shortYear") {
+              (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yy");
+            } else if (outputDateFormat == "shortYearThenMonth") {
+              (instance.vgsField as ExpirationDateEditText).setDateRegex("yyyy/MM");
+            } else if (outputDateFormat == "longYearThenMonth") {
+              (instance.vgsField as ExpirationDateEditText).setDateRegex("yy/MM");
             }
-            "cardNumber" -> {
-              instance.setCardNumberField();
-            }
+          }
+        }
+        if (fieldType == "cvc") {
+          System.out.println("========================================got cvc input");
+          instance.setCvvField();
+        }
+        if (fieldType == "cardNumber") {
+          System.out.println("========================================got card# input");
+          instance.setCardNumberField();
+          initParams.getString("divider")?.let { divider ->
+            (instance.vgsField as VGSCardNumberEditText).setDivider(divider.single());
+          }
         }
       }
 
       val field = instance.vgsField;
+
       val collector = CollectorManager.map[it];
       collector?.bindView(field);
 
@@ -111,7 +146,7 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
                 rule.setRegex(patternStr);
               }
 
-              (min != null && max != null && max > min && max > 0).run {
+              (max > min && max > 0).run {
                 if (this) {
                   rule.setAllowableMinLength(min).setAllowableMaxLength(max);
                 }
@@ -135,7 +170,6 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
           (field as VGSEditText).setMaxLength(formatPattern.length)
         } catch (e: Error) {
           System.out.println("VGSCollect failed to set formatPattern, error=$e");
-
         }
       }
     }
