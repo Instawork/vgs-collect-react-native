@@ -30,56 +30,64 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
     val instance = (view as VgsCollectFieldInstance);
 
     collectorName?.let { it ->
+      initParams.getString("fieldName")?.let { fieldName ->
+        instance.fieldName = fieldName;
+      }
+
+      initParams.getString("keyboardType")?.let { keyboardType ->
+        instance.keyboardType = keyboardType;
+      }
+
       initParams.getString("fieldType")?.let { fieldType ->
         when (fieldType) {
-            "expDate" -> {
-              instance.initExpField();
-              initParams.getString("inputDateFormat")?.let { inputDateFormat ->
-                when (inputDateFormat) {
-                  "longYear" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yyyy");
-                  }
-                  "shortYear" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yy");
-                  }
-                  "shortYearThenMonth" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("yy/MM");
-                  }
-                  "longYearThenMonth" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("yyyy/MM");
-                  }
+          "expDate" -> {
+            instance.initExpField();
+            initParams.getString("inputDateFormat")?.let { inputDateFormat ->
+              when (inputDateFormat) {
+                "longYear" -> {
+                  (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yyyy");
+                }
+                "shortYear" -> {
+                  (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yy");
+                }
+                "shortYearThenMonth" -> {
+                  (instance.vgsField as ExpirationDateEditText).setDateRegex("yy/MM");
+                }
+                "longYearThenMonth" -> {
+                  (instance.vgsField as ExpirationDateEditText).setDateRegex("yyyy/MM");
                 }
               }
+            }
 
-              initParams.getString("outputDateFormat")?.let { outputDateFormat ->
-                when (outputDateFormat) {
-                  "longYear" -> {
-                    (instance.vgsField as ExpirationDateEditText).setOutputRegex("MM-yyyy");
-                  }
-                  "shortYear" -> {
-                    (instance.vgsField as ExpirationDateEditText).setOutputRegex("MM-yy");
-                  }
-                  "shortYearThenMonth" -> {
-                    (instance.vgsField as ExpirationDateEditText).setOutputRegex("yy-MM");
-                  }
-                  "longYearThenMonth" -> {
-                    (instance.vgsField as ExpirationDateEditText).setOutputRegex("yyyy-MM");
-                  }
+            initParams.getString("outputDateFormat")?.let { outputDateFormat ->
+              when (outputDateFormat) {
+                "longYear" -> {
+                  (instance.vgsField as ExpirationDateEditText).setOutputRegex("MM-yyyy");
+                }
+                "shortYear" -> {
+                  (instance.vgsField as ExpirationDateEditText).setOutputRegex("MM-yy");
+                }
+                "shortYearThenMonth" -> {
+                  (instance.vgsField as ExpirationDateEditText).setOutputRegex("yy-MM");
+                }
+                "longYearThenMonth" -> {
+                  (instance.vgsField as ExpirationDateEditText).setOutputRegex("yyyy-MM");
                 }
               }
             }
-            "cvc" -> {
-              instance.initCvvField();
+          }
+          "cvc" -> {
+            instance.initCvvField();
+          }
+          "cardNumber" -> {
+            instance.initCardNumberField();
+            initParams.getString("divider")?.let { divider ->
+              (instance.vgsField as VGSCardNumberEditText).setDivider(divider.single());
             }
-            "cardNumber" -> {
-              instance.initCardNumberField();
-              initParams.getString("divider")?.let { divider ->
-                (instance.vgsField as VGSCardNumberEditText).setDivider(divider.single());
-              }
-            }
-            else -> {
-              instance.initText()
-            }
+          }
+          else -> {
+            instance.initText()
+          }
         }
       }
 
@@ -90,22 +98,6 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
       instance.vgsField?.let { field ->
         val collector = CollectorManager.map[it];
         collector?.bindView(field);
-
-        initParams.getString("fieldName")?.let { fieldName ->
-          field.setFieldName(fieldName);
-        }
-
-        initParams.getString("keyboardType")?.let { keyboardType ->
-          if (keyboardType === "numberPad") {
-            field.setInputType(InputType.TYPE_CLASS_NUMBER)
-
-            instance.isSecureTextEntry?.let {
-              if (it) {
-                field.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD)
-              }
-            }
-          }
-        }
       }
     }
   }

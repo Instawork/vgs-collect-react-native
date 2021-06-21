@@ -44,9 +44,9 @@ export default function App() {
       />
       <TouchableOpacity
         onPress={() => {
-          submit('/cards/14034/activate', 'POST', {
+          submit('/cards/15438/activate', 'POST', {
             'Authorization':
-              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzM1MTI1L2dpbGdhcmRvc2grNUBnbWFpbC5jb20iLCJleHAiOiIyMDIxLTA2LTE2VDEwOjM1OjI2LjU2OVoiLCJqdGkiOm51bGwsIm9yZ0lkIjpudWxsLCJzY29wZSI6ImNhcmRzLXNlbnNpdGl2ZS13cml0ZSIsImN1c3RvbWVySWQiOiIzNTEyNSJ9sWmtq5huRuQC7TAeVZqSy1nkBBoEnL6xXFIFlrrSVep11x3SVAJkeL6TdNYFCvcC2IY71whtNkr9skaw3CjxCw',
+              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzM2ODQ4L2dpbGdhcmRvc2grNkBnbWFpbC5jb20iLCJleHAiOiIyMDIxLTA2LTIyVDEwOjA2OjIwLjk5M1oiLCJqdGkiOm51bGwsIm9yZ0lkIjpudWxsLCJzY29wZSI6ImNhcmRzLXNlbnNpdGl2ZS13cml0ZSIsImN1c3RvbWVySWQiOiIzNjg0OCJ91mRJE55eLyqnIakxa2xDMytsse_iTaTdyl0uYEFmZNIDWhcUffnUXrghaogd7Gu-kvNzn1E1rp1LFHkMfqlGAA',
             'Content-Type': 'application/vnd.api+json',
           })
             .then((r) => {
@@ -63,10 +63,8 @@ export default function App() {
         config={{
           collectorName: collectorName2,
           fieldName: 'data.attributes.pin',
-          fieldType: 'text',
-          formatPattern: '####',
+          fieldType: 'cvc',
           keyboardType: 'numberPad',
-          // validations: [{ min: 4, max: 6 }],
         }}
         placeholder={'_ _ _ _'}
         fontSize={50}
@@ -75,10 +73,10 @@ export default function App() {
       />
       <TouchableOpacity
         onPress={() => {
-          submit2('/cards/14034/secure-data/pin', 'POST', {
+          submit2('/cards/15438/secure-data/pin', 'POST', {
             'mapDotToObject': 'true',
             'Authorization':
-              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzM1MTI1L2dpbGdhcmRvc2grNUBnbWFpbC5jb20iLCJleHAiOiIyMDIxLTA2LTE2VDEwOjM1OjI2LjU2OVoiLCJqdGkiOm51bGwsIm9yZ0lkIjpudWxsLCJzY29wZSI6ImNhcmRzLXNlbnNpdGl2ZS13cml0ZSIsImN1c3RvbWVySWQiOiIzNTEyNSJ9sWmtq5huRuQC7TAeVZqSy1nkBBoEnL6xXFIFlrrSVep11x3SVAJkeL6TdNYFCvcC2IY71whtNkr9skaw3CjxCw',
+              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzM2ODQ4L2dpbGdhcmRvc2grNkBnbWFpbC5jb20iLCJleHAiOiIyMDIxLTA2LTIyVDEwOjA2OjIwLjk5M1oiLCJqdGkiOm51bGwsIm9yZ0lkIjpudWxsLCJzY29wZSI6ImNhcmRzLXNlbnNpdGl2ZS13cml0ZSIsImN1c3RvbWVySWQiOiIzNjg0OCJ91mRJE55eLyqnIakxa2xDMytsse_iTaTdyl0uYEFmZNIDWhcUffnUXrghaogd7Gu-kvNzn1E1rp1LFHkMfqlGAA',
             'Content-Type': 'application/vnd.api+json',
           })
             .then((r) => {

@@ -24,6 +24,8 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
   var isSecureTextEntry: Boolean? = null;
   var textColor: Int? = null;
   var fontSize: Float? = null;
+  var keyboardType: String? = null;
+  var fieldName: String? = null;
 
   init {
     this.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -49,9 +51,25 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
         field.setTextColor(it);
       }
 
+      fieldName?.let {
+        field.setFieldName(it);
+      }
+
       isSecureTextEntry?.let {
         if (it) {
           field.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        }
+      }
+
+      keyboardType?.let {
+        if (it === "numberPad") {
+          isSecureTextEntry?.let {
+            if (it) {
+              field.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+            } else {
+              field.setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
+          }
         }
       }
 
