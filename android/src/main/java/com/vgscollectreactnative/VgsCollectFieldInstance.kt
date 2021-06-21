@@ -1,7 +1,11 @@
 package com.vgscollectreactnative
 
+import android.graphics.Typeface
+import android.text.InputType
+import android.util.TypedValue
 import android.widget.LinearLayout
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.views.text.ReactFontManager
 import com.verygoodsecurity.vgscollect.view.InputFieldView
 import com.verygoodsecurity.vgscollect.view.date.DatePickerMode
 import com.verygoodsecurity.vgscollect.widget.CardVerificationCodeEditText
@@ -11,15 +15,53 @@ import com.verygoodsecurity.vgscollect.widget.VGSEditText
 import com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
 
 class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(context) {
-  private var INSTANCE_TYPE: String = "text"
   private var reactContext: ThemedReactContext = context
-  var vgsField: InputFieldView = VGSEditText(context)
+  var vgsField: InputFieldView? = null;
   private lateinit var vgsTextInputLayout: VGSTextInputLayout
+
+  var placeholder: String? = null;
+  var fontFamily: String? = null;
+  var isSecureTextEntry: Boolean? = null;
+  var textColor: Int? = null;
+  var fontSize: Float? = null;
 
   init {
     this.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     this.createVGSTextInputLayout(reactContext)
     this.addView(vgsTextInputLayout)
+  }
+
+  fun setViewProps() {
+    vgsField?.let { field ->
+      placeholder?.let {
+        field.setHint(it);
+      }
+
+      fontFamily?.let {
+        if (it != "") {
+          ReactFontManager.getInstance().getTypeface(it, Typeface.NORMAL, this.reactContext.assets)?.let {fontInstance ->
+            field.setTypeface(fontInstance)
+          };
+        }
+      }
+
+      textColor?.let {
+        field.setTextColor(it);
+      }
+
+      isSecureTextEntry?.let {
+        if (it) {
+          field.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        }
+      }
+
+      fontSize?.let {
+        field.setTextSize(TypedValue.COMPLEX_UNIT_PX, it);
+      }
+
+      field.setIsRequired(true);
+      field.setSingleLine(true);
+    }
   }
 
   private fun createVGSTextInputLayout(reactContext: ThemedReactContext) {
@@ -29,35 +71,31 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
   }
 
   private fun addInputToLayout() {
-    vgsField.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-    vgsTextInputLayout.addView(vgsField)
+    vgsField?.let {
+      it.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+      vgsTextInputLayout.addView(it)
+      setViewProps();
+    }
   }
 
-  fun setExpField() {
+  fun initExpField() {
     vgsField = ExpirationDateEditText(context)
     (vgsField as ExpirationDateEditText).setDatePickerMode(DatePickerMode.SPINNER)
-    vgsTextInputLayout.setHint("Exp Date")
-    INSTANCE_TYPE = "expDate"
     this.addInputToLayout()
   }
 
-  fun setCvvField() {
+  fun initCvvField() {
     vgsField = CardVerificationCodeEditText(context)
-    INSTANCE_TYPE = "cvc"
     this.addInputToLayout()
   }
 
-  fun setCardNumberField() {
+  fun initCardNumberField() {
     vgsField = VGSCardNumberEditText(context)
-    INSTANCE_TYPE = "cardNumber"
     this.addInputToLayout()
   }
 
-  fun setText() {
+  fun initText() {
+    vgsField = VGSEditText(context)
     this.addInputToLayout()
-  }
-
-  fun getType(): String {
-    return INSTANCE_TYPE
   }
 }

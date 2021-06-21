@@ -22,7 +22,7 @@ export default function App() {
           fieldName: 'data.attributes.cvv2',
           fieldType: 'cvc',
         }}
-        fontSize={30}
+        fontSize={50}
         placeholder={'CVC'}
         isSecureTextEntry={true}
         style={styles.box}
@@ -37,7 +37,7 @@ export default function App() {
           outputDateFormat: 'longYearThenMonth',
           formatPattern: '##-##',
         }}
-        fontSize={30}
+        fontSize={50}
         placeholder={'MM-YY'}
         isSecureTextEntry={false}
         style={styles.box}
