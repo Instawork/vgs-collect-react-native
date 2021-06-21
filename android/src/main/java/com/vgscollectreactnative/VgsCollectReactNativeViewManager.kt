@@ -17,6 +17,7 @@ import com.verygoodsecurity.vgscollect.widget.VGSEditText
 
 import com.verygoodsecurity.vgscollect.widget.VGSCardNumberEditText
 import com.verygoodsecurity.vgscollect.widget.ExpirationDateEditText
+import com.verygoodsecurity.vgscollect.view.InputFieldView
 
 
 class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
@@ -29,41 +30,6 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
     return VgsCollectFieldInstance(reactContext)
   }
 
-  @ReactProp(name = "fontSize")
-  fun setFontSize(view: View, value: Float = 16.toFloat()) {
-    (view as VgsCollectFieldInstance).vgsField.setTextSize(TypedValue.COMPLEX_UNIT_PX, value)
-  }
-
-  private var isSecureTextEntry: Boolean = false;
-
-  @ReactProp(name = "isSecureTextEntry")
-  fun setIsSecureTextEntry(view: View, value: Boolean) {
-    this.isSecureTextEntry = value;
-    (view as VgsCollectFieldInstance).vgsField.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-  }
-
-  @ReactProp(name = "fontFamily")
-  fun setFontFamily(view: View, value: String) {
-    if (value != "") {
-      ReactFontManager.getInstance().getTypeface(value, Typeface.NORMAL, this.reactContext.assets)?.let {
-        (view as VgsCollectFieldInstance).vgsField.setTypeface(
-          it
-        )
-      };
-    }
-  }
-
-  @ReactProp(name = "placeholder")
-  fun setPlaceholder(view: View, placeholder: String) {
-    (view as VgsCollectFieldInstance).vgsField.setHint(placeholder);
-  }
-
-  @ReactProp(name = "textColor", customType = "Color")
-  fun setTextColor(view: View, value: Int) {
-    (view as VgsCollectFieldInstance).vgsField.setTextColor(value);
-    view.vgsField.setHintTextColor(value);
-  }
-
   @ReactProp(name = "config")
   fun config(view: View, initParams: ReadableMap) {
     val collectorName = initParams.getString("collectorName");
@@ -71,15 +37,14 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
 
     collectorName?.let { it ->
       initParams.getString("fieldType")?.let { fieldType ->
-        System.out.println("========================================type $fieldType");
         if (fieldType == "expDate") {
-          System.out.println("========================================got exp input");
+          System.out.println("=====================================expDate");
           instance.setExpField();
           initParams.getString("inputDateFormat")?.let { inputDateFormat ->
             if (inputDateFormat == "longYear") {
               (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yyyy");
             } else if (inputDateFormat == "shortYear") {
-              
+
               (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yy");
             } else if (inputDateFormat == "shortYearThenMonth") {
               (instance.vgsField as ExpirationDateEditText).setDateRegex("yyyy/MM");
@@ -100,16 +65,20 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
             }
           }
         }
-        if (fieldType == "cvc") {
-          System.out.println("========================================got cvc input");
+        else if (fieldType == "cvc") {
+          System.out.println("=====================================cvc");
           instance.setCvvField();
         }
-        if (fieldType == "cardNumber") {
-          System.out.println("========================================got card# input");
+        else if (fieldType == "cardNumber") {
+          System.out.println("=====================================cardNumber");
           instance.setCardNumberField();
           initParams.getString("divider")?.let { divider ->
             (instance.vgsField as VGSCardNumberEditText).setDivider(divider.single());
           }
+        }
+        else {
+          System.out.println("=====================================text");
+          instance.setText()
         }
       }
 
@@ -137,24 +106,35 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
           val rule = VGSInfoRule.ValidationBuilder();
 
           for (i in rawValidationsArray.toArrayList().indices) {
+
+          System.out.println("===================================== $i");
             rawValidationsArray.getMap(i)?.let { rawValidation ->
               val max = rawValidation.getInt("max");
               val min = rawValidation.getInt("min");
               val pattern = rawValidation.getString("pattern");
 
+
+          System.out.println("===================================== $min $max $pattern");
+
               pattern?.let {patternStr ->
                 rule.setRegex(patternStr);
               }
 
-              (max > min && max > 0).run {
-                if (this) {
+              if (min != null && max != null && max > min && max > 0) {
                   rule.setAllowableMinLength(min).setAllowableMaxLength(max);
-                }
               }
             }
           }
+          rule.build()
 
-          (field as VGSEditText).addRule(rule.build())
+          var tempName = instance.getType();
+          System.out.println("===================================== $tempName");
+
+
+          var method = field.javaClass.getMethod("addRule", VGSInfoRule.ValidationBuilder().javaClass);
+          if (method != null) {
+            method.invoke(field, rule);
+          }
         } catch (e: Error) {
           System.out.println("VGSCollect failed to set validations, error=$e");
         }
@@ -163,15 +143,57 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
       field.setIsRequired(true);
       field.setSingleLine(true);
 
-      initParams.getString("formatPattern")?.let { formatPattern ->
-        try {
-          System.out.println("VGSCollect formatPattern->setMaxLength to ${formatPattern.length}");
+      // initParams.getString("formatPattern")?.let { formatPattern ->
+      //   try {
+      //     System.out.println("VGSCollect formatPattern->setMaxLength to ${formatPattern.length}");
 
-          (field as VGSEditText).setMaxLength(formatPattern.length)
-        } catch (e: Error) {
-          System.out.println("VGSCollect failed to set formatPattern, error=$e");
-        }
-      }
+      //     var method = field.javaClass.getMethod("setMaxLength");
+
+      //     System.out.println("================================================== $method");
+      //     if (method != null) {
+      //       method.invoke(field, formatPattern.length);
+      //     }
+      //   } catch (e: Error) {
+      //     System.out.println("VGSCollect failed to set formatPattern, error=$e");
+      //   }
+      // }
     }
+  }
+
+  @ReactProp(name = "fontSize")
+  fun setFontSize(view: View, value: Float = 16.toFloat()) {
+    (view as VgsCollectFieldInstance).vgsField.setTextSize(TypedValue.COMPLEX_UNIT_PX, value)
+  }
+
+  private var isSecureTextEntry: Boolean = false;
+
+  @ReactProp(name = "isSecureTextEntry")
+  fun setIsSecureTextEntry(view: View, value: Boolean) {
+
+    System.out.println("=====================================secure $value");
+    this.isSecureTextEntry = value;
+    (view as VgsCollectFieldInstance).vgsField.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+  }
+
+  @ReactProp(name = "fontFamily")
+  fun setFontFamily(view: View, value: String) {
+    if (value != "") {
+      ReactFontManager.getInstance().getTypeface(value, Typeface.NORMAL, this.reactContext.assets)?.let {
+        (view as VgsCollectFieldInstance).vgsField.setTypeface(
+          it
+        )
+      };
+    }
+  }
+
+  @ReactProp(name = "placeholder")
+  fun setPlaceholder(view: View, placeholder: String) {
+    (view as VgsCollectFieldInstance).vgsField.setHint(placeholder);
+  }
+
+  @ReactProp(name = "textColor", customType = "Color")
+  fun setTextColor(view: View, value: Int) {
+    (view as VgsCollectFieldInstance).vgsField.setTextColor(value);
+    view.vgsField.setHintTextColor(value);
   }
 }

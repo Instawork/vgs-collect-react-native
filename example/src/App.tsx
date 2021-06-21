@@ -66,7 +66,7 @@ export default function App() {
           fieldType: 'text',
           formatPattern: '####',
           keyboardType: 'numberPad',
-          validations: [{ min: 4, max: 6 }],
+          // validations: [{ min: 4, max: 6 }],
         }}
         placeholder={'_ _ _ _'}
         fontSize={50}
