@@ -43,10 +43,10 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
                     (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yy");
                   }
                   "shortYearThenMonth" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("yyyy/MM");
+                    (instance.vgsField as ExpirationDateEditText).setDateRegex("yy/MM");
                   }
                   "longYearThenMonth" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("yy/MM");
+                    (instance.vgsField as ExpirationDateEditText).setDateRegex("yyyy/MM");
                   }
                 }
               }
@@ -54,16 +54,16 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
               initParams.getString("outputDateFormat")?.let { outputDateFormat ->
                 when (outputDateFormat) {
                   "longYear" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yyyy");
+                    (instance.vgsField as ExpirationDateEditText).setOutputRegex("MM-yyyy");
                   }
                   "shortYear" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("MM/yy");
+                    (instance.vgsField as ExpirationDateEditText).setOutputRegex("MM-yy");
                   }
                   "shortYearThenMonth" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("yyyy/MM");
+                    (instance.vgsField as ExpirationDateEditText).setOutputRegex("yy-MM");
                   }
                   "longYearThenMonth" -> {
-                    (instance.vgsField as ExpirationDateEditText).setDateRegex("yy/MM");
+                    (instance.vgsField as ExpirationDateEditText).setOutputRegex("yyyy-MM");
                   }
                 }
               }
@@ -104,44 +104,6 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
                 field.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD)
               }
             }
-          }
-        }
-
-        initParams.getArray("validations")?.let { rawValidationsArray ->
-          try {
-            val rule = VGSInfoRule.ValidationBuilder();
-
-            for (i in rawValidationsArray.toArrayList().indices) {
-              rawValidationsArray.getMap(i)?.let { rawValidation ->
-                val max = rawValidation.getInt("max");
-                val min = rawValidation.getInt("min");
-                val pattern = rawValidation.getString("pattern");
-
-                pattern?.let {patternStr ->
-                  rule.setRegex(patternStr);
-                }
-
-                if (min != null && max != null && max > min && max > 0) {
-                  rule.setAllowableMinLength(min).setAllowableMaxLength(max);
-                }
-              }
-            }
-
-            if (field is VGSEditText) {
-              field.addRule(rule.build())
-            }
-          } catch (e: Error) {
-            System.out.println("VGSCollect failed to set validations, error=$e");
-          }
-        }
-
-        initParams.getString("formatPattern")?.let { formatPattern ->
-          try {
-            if (field is VGSEditText) {
-              field.setMaxLength( formatPattern.length);
-            }
-          } catch (e: Error) {
-            System.out.println("VGSCollect failed to set formatPattern, error=$e");
           }
         }
       }
