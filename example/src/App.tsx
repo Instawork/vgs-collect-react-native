@@ -46,7 +46,7 @@ export default function App() {
         onPress={() => {
           submit('/cards/15438/activate', 'POST', {
             'Authorization':
-              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzM2ODQ4L2dpbGdhcmRvc2grNkBnbWFpbC5jb20iLCJleHAiOiIyMDIxLTA2LTIyVDEwOjA2OjIwLjk5M1oiLCJqdGkiOm51bGwsIm9yZ0lkIjpudWxsLCJzY29wZSI6ImNhcmRzLXNlbnNpdGl2ZS13cml0ZSIsImN1c3RvbWVySWQiOiIzNjg0OCJ91mRJE55eLyqnIakxa2xDMytsse_iTaTdyl0uYEFmZNIDWhcUffnUXrghaogd7Gu-kvNzn1E1rp1LFHkMfqlGAA',
+              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzM2ODQ4L2dpbGdhcmRvc2grNkBnbWFpbC5jb20iLCJleHAiOiIyMDIxLTA2LTIzVDE1OjQ0OjExLjA5MFoiLCJqdGkiOm51bGwsIm9yZ0lkIjpudWxsLCJzY29wZSI6ImNhcmRzLXNlbnNpdGl2ZS13cml0ZSIsImN1c3RvbWVySWQiOiIzNjg0OCJ97EZMxeIbAg01SfwxZurOYzeh2IvzkENYg4N1gs2Ct_xevk_n9D5WKCH-g9Z360dpjHFyJb45akMdfpDl86zTAA',
             'Content-Type': 'application/vnd.api+json',
           })
             .then((r) => {
@@ -63,7 +63,7 @@ export default function App() {
         config={{
           collectorName: collectorName2,
           fieldName: 'data.attributes.pin',
-          fieldType: 'cvc',
+          fieldType: 'pin',
           keyboardType: 'numberPad',
         }}
         placeholder={'_ _ _ _'}
@@ -76,7 +76,7 @@ export default function App() {
           submit2('/cards/15438/secure-data/pin', 'POST', {
             'mapDotToObject': 'true',
             'Authorization':
-              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzM2ODQ4L2dpbGdhcmRvc2grNkBnbWFpbC5jb20iLCJleHAiOiIyMDIxLTA2LTIyVDEwOjA2OjIwLjk5M1oiLCJqdGkiOm51bGwsIm9yZ0lkIjpudWxsLCJzY29wZSI6ImNhcmRzLXNlbnNpdGl2ZS13cml0ZSIsImN1c3RvbWVySWQiOiIzNjg0OCJ91mRJE55eLyqnIakxa2xDMytsse_iTaTdyl0uYEFmZNIDWhcUffnUXrghaogd7Gu-kvNzn1E1rp1LFHkMfqlGAA',
+              'Bearer v2.public.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOm51bGwsInN1YiI6ImN1c3RvbWVyLzM2ODQ4L2dpbGdhcmRvc2grNkBnbWFpbC5jb20iLCJleHAiOiIyMDIxLTA2LTIzVDE1OjQ0OjExLjA5MFoiLCJqdGkiOm51bGwsIm9yZ0lkIjpudWxsLCJzY29wZSI6ImNhcmRzLXNlbnNpdGl2ZS13cml0ZSIsImN1c3RvbWVySWQiOiIzNjg0OCJ97EZMxeIbAg01SfwxZurOYzeh2IvzkENYg4N1gs2Ct_xevk_n9D5WKCH-g9Z360dpjHFyJb45akMdfpDl86zTAA',
             'Content-Type': 'application/vnd.api+json',
           })
             .then((r) => {

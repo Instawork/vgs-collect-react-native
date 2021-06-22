@@ -85,6 +85,9 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
               (instance.vgsField as VGSCardNumberEditText).setDivider(divider.single());
             }
           }
+          "pin" -> {
+            instance.initPinField();
+          }
           else -> {
             instance.initText()
           }

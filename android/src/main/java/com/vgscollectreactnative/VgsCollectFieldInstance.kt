@@ -13,11 +13,12 @@ import com.verygoodsecurity.vgscollect.widget.ExpirationDateEditText
 import com.verygoodsecurity.vgscollect.widget.VGSCardNumberEditText
 import com.verygoodsecurity.vgscollect.widget.VGSEditText
 import com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
+ 
+import com.verygoodsecurity.vgscollect.view.card.validation.rules.VGSInfoRule
 
 class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(context) {
   private var reactContext: ThemedReactContext = context
   var vgsField: InputFieldView? = null;
-  private lateinit var vgsTextInputLayout: VGSTextInputLayout
 
   var placeholder: String? = null;
   var fontFamily: String? = null;
@@ -28,9 +29,6 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
   var fieldName: String? = null;
 
   init {
-    this.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-    this.createVGSTextInputLayout(reactContext)
-    this.addView(vgsTextInputLayout)
   }
 
   fun setViewProps() {
@@ -82,17 +80,11 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
     }
   }
 
-  private fun createVGSTextInputLayout(reactContext: ThemedReactContext) {
-    vgsTextInputLayout = VGSTextInputLayout(reactContext)
-    vgsTextInputLayout.layoutParams =
-        LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-  }
-
   private fun addInputToLayout() {
     vgsField?.let {
       it.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-      vgsTextInputLayout.addView(it)
       setViewProps();
+      this.addView(it)
     }
   }
 
@@ -109,6 +101,18 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
 
   fun initCardNumberField() {
     vgsField = VGSCardNumberEditText(context)
+    this.addInputToLayout()
+  }
+
+  fun initPinField() {
+    vgsField = VGSEditText(context)
+    val rule : VGSInfoRule = VGSInfoRule.ValidationBuilder()
+    .setRegex("^[a-zA-Z0-9 ,'.-]+$")
+    .setAllowableMinLength(4)
+    .setAllowableMaxLength(6)
+    .build()
+
+    (vgsField as VGSEditText).addRule(rule)
     this.addInputToLayout()
   }
 
