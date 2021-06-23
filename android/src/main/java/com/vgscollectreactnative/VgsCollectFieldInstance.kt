@@ -7,20 +7,21 @@ import android.widget.LinearLayout
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.text.ReactFontManager
 import com.verygoodsecurity.vgscollect.view.InputFieldView
+import com.verygoodsecurity.vgscollect.view.card.validation.rules.VGSInfoRule
 import com.verygoodsecurity.vgscollect.view.date.DatePickerMode
 import com.verygoodsecurity.vgscollect.widget.CardVerificationCodeEditText
 import com.verygoodsecurity.vgscollect.widget.ExpirationDateEditText
 import com.verygoodsecurity.vgscollect.widget.VGSCardNumberEditText
 import com.verygoodsecurity.vgscollect.widget.VGSEditText
 import com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
- 
-import com.verygoodsecurity.vgscollect.view.card.validation.rules.VGSInfoRule
+
 
 class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(context) {
   private var reactContext: ThemedReactContext = context
   var vgsField: InputFieldView? = null;
 
   var placeholder: String? = null;
+  var placeholderColor: Int? = null;
   var fontFamily: String? = null;
   var isSecureTextEntry: Boolean? = null;
   var textColor: Int? = null;
@@ -35,6 +36,10 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
     vgsField?.let { field ->
       placeholder?.let {
         field.setHint(it);
+      }
+
+      placeholderColor?.let {
+        field.setHintTextColor(it)
       }
 
       fontFamily?.let {

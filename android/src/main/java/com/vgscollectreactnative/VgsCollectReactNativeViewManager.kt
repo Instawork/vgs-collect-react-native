@@ -129,6 +129,12 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
     view.setViewProps();
   }
 
+  @ReactProp(name = "placeholderColor", customType = "Color")
+  fun setPlaceholderColor(view: View, placeholderColor: Int) {
+    (view as VgsCollectFieldInstance).placeholderColor = placeholderColor;
+    view.setViewProps();
+  }
+
   @ReactProp(name = "textColor", customType = "Color")
   fun setTextColor(view: View, value: Int) {
     (view as VgsCollectFieldInstance).textColor = value;
