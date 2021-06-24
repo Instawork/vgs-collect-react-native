@@ -2,6 +2,7 @@ package com.vgscollectreactnative
 
 import android.graphics.Typeface
 import android.text.InputType
+import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.widget.LinearLayout
 import com.facebook.react.uimanager.ThemedReactContext
@@ -19,9 +20,11 @@ import com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
 class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(context) {
   private var reactContext: ThemedReactContext = context
   var vgsField: InputFieldView? = null;
+  private lateinit var vgsTextInputLayout: VGSTextInputLayout
 
   var placeholder: String? = null;
   var placeholderColor: Int? = null;
+  var backgroundColor: Int? = null;
   var fontFamily: String? = null;
   var isSecureTextEntry: Boolean? = null;
   var textColor: Int? = null;
@@ -30,6 +33,16 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
   var fieldName: String? = null;
 
   init {
+    this.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+    this.createVGSTextInputLayout(reactContext)
+    this.addView(vgsTextInputLayout)
+  }
+
+  private fun createVGSTextInputLayout(reactContext: ThemedReactContext) {
+    vgsTextInputLayout = VGSTextInputLayout(reactContext)
+    vgsTextInputLayout.layoutParams =
+        LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+    vgsTextInputLayout.setHintEnabled(false)
   }
 
   fun setViewProps() {
@@ -40,6 +53,10 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
 
       placeholderColor?.let {
         field.setHintTextColor(it)
+      }
+
+      backgroundColor?.let {
+        vgsTextInputLayout.setBoxStrokeColor(it)
       }
 
       fontFamily?.let {
@@ -89,7 +106,7 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
     vgsField?.let {
       it.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
       setViewProps();
-      this.addView(it)
+      vgsTextInputLayout.addView(it)
     }
   }
 

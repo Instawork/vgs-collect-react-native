@@ -38,6 +38,7 @@ type VGSCollectInputProps = {
   isSecureTextEntry?: boolean;
   placeholder?: string;
   placeholderColor?: string;
+  backgroundColor?: string;
   textColor?: string;
   fontFamily?: string;
   fontSize?: number;
