@@ -13,7 +13,13 @@ type VGSCollectInputProps = {
   config: {
     collectorName: string;
     fieldName: string;
-    fieldType: 'cardHolderName' | 'expDate' | 'cvc' | 'cardNumber' | 'text';
+    fieldType:
+      | 'cardHolderName'
+      | 'expDate'
+      | 'cvc'
+      | 'cardNumber'
+      | 'pin'
+      | 'text';
     validations?: Validation[];
     formatPattern?: string;
     divider?: string;
@@ -31,6 +37,7 @@ type VGSCollectInputProps = {
   };
   isSecureTextEntry?: boolean;
   placeholder?: string;
+  placeholderColor?: string;
   textColor?: string;
   fontFamily?: string;
   fontSize?: number;

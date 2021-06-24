@@ -37,7 +37,7 @@ class CollectorManager internal constructor(context: ReactApplicationContext?) :
       requestBuilder.setMethod(methodObj);
       requestBuilder.setPath(path);
 
-      headers?.let { headersRaw ->
+      headers.let { headersRaw ->
         val iterator = headersRaw.keySetIterator();
         val map = mutableMapOf<String, String>();
 
