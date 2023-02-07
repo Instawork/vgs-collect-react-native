@@ -1,11 +1,13 @@
 package com.vgscollectreactnative
 
+import android.annotation.SuppressLint
 import android.text.InputType
 import android.view.View
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.verygoodsecurity.vgscollect.view.InputFieldView
 import com.verygoodsecurity.vgscollect.view.card.validation.rules.VGSInfoRule
 import com.verygoodsecurity.vgscollect.widget.VGSEditText
 
@@ -24,10 +26,12 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
     return VgsCollectFieldInstance(reactContext)
   }
 
+  @SuppressLint("ResourceType")
   @ReactProp(name = "config")
   fun config(view: View, initParams: ReadableMap) {
     val collectorName = initParams.getString("collectorName");
     val instance = (view as VgsCollectFieldInstance);
+
 
     collectorName?.let { it ->
       initParams.getString("fieldName")?.let { fieldName ->
@@ -87,6 +91,15 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
           }
           "pin" -> {
             instance.initPinField();
+            instance.vgsField?.let { field ->
+              field.id = R.id.vgsPin
+            }
+          }
+          "pinConfirm" -> {
+            instance.initPinConfirmField();
+            instance.vgsField?.let { field ->
+              field.id = R.id.vgsPinConfirm
+            }
           }
           else -> {
             instance.initText()

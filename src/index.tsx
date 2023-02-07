@@ -19,6 +19,7 @@ type VGSCollectInputProps = {
       | 'cvc'
       | 'cardNumber'
       | 'pin'
+      | 'pinConfirm'
       | 'text';
     validations?: Validation[];
     formatPattern?: string;
@@ -55,6 +56,11 @@ export type SubmitFn<TData> = (
   headers: Record<string, string>
 ) => Promise<{ code: number; data?: TData }>;
 
+export type PinConfirmFn = (
+  path: string,
+  method: 'GET' | 'POST',
+) => Promise<boolean>;
+
 export function createCollector<TData = any>(
   vaultId: string,
   environment: VGSEnvironment,
@@ -62,6 +68,7 @@ export function createCollector<TData = any>(
 ): {
   collectorName: string;
   submit: SubmitFn<TData>;
+  pinConfirm: PinConfirmFn
 } {
   CollectorManager.createNamedCollector(name, vaultId, environment);
 
@@ -100,5 +107,34 @@ export function createCollector<TData = any>(
 
       return fn!();
     },
+    pinConfirm: async (path, method = 'POST', headers = {}) => {
+      const fn = Platform.select({
+        ios: () => CollectorManager.pinConfirm(name, path, method, headers),
+        android: () => {
+          return new Promise<boolean>(
+            (resolve, reject) => {
+              CollectorManager.pinConfirm(name, path, method, headers,
+                (payload: any) => {
+                  if ('error' in payload) {
+                    reject(new Error(payload.error || payload.code));
+                  } else {
+                    resolve(
+                      typeof payload.data === 'string'
+                        ? {
+                            ...payload,
+                            data: JSON.parse(payload.data),
+                          }
+                        : payload
+                    );
+                  }
+                }
+              );
+            }
+          )
+        }
+      })
+
+      return fn()
+    }
   };
 }
