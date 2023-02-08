@@ -1,6 +1,5 @@
 package com.vgscollectreactnative
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import com.facebook.react.bridge.*
 import com.verygoodsecurity.vgscollect.VGSCollectLogger
@@ -29,11 +28,10 @@ class CollectorManager internal constructor(context: ReactApplicationContext?) :
     }
   }
 
-  @SuppressLint("ResourceType")
   @ReactMethod
-  fun confirmPin(name: String, path: String, method: String, headers: ReadableMap, callback: Callback) {
+  fun pinConfirm(name: String, callback: Callback) {
     VGSCollectLogger.logLevel = VGSCollectLogger.Level.WARN;
-    System.out.println("VGSCollect wrapper triggered confirmPin, name=$name, path=$path, method=$method");
+    System.out.println("VGSCollect wrapper triggered confirmPin, name=$name");
 
     val activity: Activity? = currentActivity
     var isEqual = true
@@ -44,11 +42,12 @@ class CollectorManager internal constructor(context: ReactApplicationContext?) :
         isEqual = pin.isContentEquals(pinConfirm)
       }
     }
-
-    return isEqual
+    val map = Arguments.createMap();
+    map.putInt("code", 200);
+    map.putBoolean("data", isEqual);
+    callback.invoke(map);
   }
 
-  @SuppressLint("ResourceType")
   @ReactMethod
   fun submit(name: String, path: String, method: String, headers: ReadableMap, callback: Callback) {
     VGSCollectLogger.logLevel = VGSCollectLogger.Level.WARN;

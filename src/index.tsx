@@ -59,7 +59,7 @@ export type SubmitFn<TData> = (
 export type PinConfirmFn = (
   path: string,
   method: 'GET' | 'POST',
-) => Promise<boolean>;
+) => Promise<any>;
 
 export function createCollector<TData = any>(
   vaultId: string,
@@ -107,25 +107,20 @@ export function createCollector<TData = any>(
 
       return fn!();
     },
-    pinConfirm: async (path, method = 'POST', headers = {}) => {
+    pinConfirm: async () => {
       const fn = Platform.select({
-        ios: () => CollectorManager.pinConfirm(name, path, method, headers),
+        ios: () => {
+          return CollectorManager.pinConfirm(name) as Promise<any>
+        },
         android: () => {
-          return new Promise<boolean>(
+          return new Promise<any>(
             (resolve, reject) => {
-              CollectorManager.pinConfirm(name, path, method, headers,
+              CollectorManager.pinConfirm(name,
                 (payload: any) => {
                   if ('error' in payload) {
                     reject(new Error(payload.error || payload.code));
                   } else {
-                    resolve(
-                      typeof payload.data === 'string'
-                        ? {
-                            ...payload,
-                            data: JSON.parse(payload.data),
-                          }
-                        : payload
-                    );
+                    resolve(payload);
                   }
                 }
               );
@@ -134,7 +129,7 @@ export function createCollector<TData = any>(
         }
       })
 
-      return fn()
+      return fn!() as any
     }
   };
 }

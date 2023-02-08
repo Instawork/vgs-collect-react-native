@@ -13,9 +13,6 @@ RCT_EXTERN_METHOD(submit:(NSString *)name
                   )
                   
 RCT_EXTERN_METHOD(pinConfirm:(NSString *)name
-                  path:(NSString *)path
-                  method:(NSString *)method
-                  headers:(NSDictionary *)headers
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject
                   )

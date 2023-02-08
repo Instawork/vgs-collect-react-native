@@ -1,6 +1,5 @@
 package com.vgscollectreactnative
 
-import android.annotation.SuppressLint
 import android.text.InputType
 import android.view.View
 import com.facebook.react.bridge.ReadableMap
@@ -26,7 +25,6 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
     return VgsCollectFieldInstance(reactContext)
   }
 
-  @SuppressLint("ResourceType")
   @ReactProp(name = "config")
   fun config(view: View, initParams: ReadableMap) {
     val collectorName = initParams.getString("collectorName");
@@ -96,7 +94,7 @@ class VgsCollectReactNativeViewManager : SimpleViewManager<View>() {
             }
           }
           "pinConfirm" -> {
-            instance.initPinConfirmField();
+            instance.initPinField();
             instance.vgsField?.let { field ->
               field.id = R.id.vgsPinConfirm
             }
