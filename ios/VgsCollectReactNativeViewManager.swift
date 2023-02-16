@@ -129,6 +129,10 @@ class VgsCollectReactNativeView : UIView {
                         }
                     }
                 }
+
+                if (fieldType == "pin" || fieldType == "pinConfirm"){
+                    rules.append(VGSValidationRuleLength(min: 4, max: 4, error: "Invalid length"))
+                }
                                 
                 if (rules.count > 0) {
                     configuration.validationRules = VGSValidationRuleSet(rules: rules);
