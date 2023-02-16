@@ -11,5 +11,11 @@ RCT_EXTERN_METHOD(submit:(NSString *)name
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject
                   )
+                  
+RCT_EXTERN_METHOD(pinConfirm:(NSString *)name
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject
+                  )
+
 
 @end

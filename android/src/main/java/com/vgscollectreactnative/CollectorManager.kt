@@ -1,5 +1,6 @@
 package com.vgscollectreactnative
 
+import android.app.Activity
 import com.facebook.react.bridge.*
 import com.verygoodsecurity.vgscollect.VGSCollectLogger
 import com.verygoodsecurity.vgscollect.core.Environment
@@ -8,6 +9,7 @@ import com.verygoodsecurity.vgscollect.core.VGSCollect
 import com.verygoodsecurity.vgscollect.core.VgsCollectResponseListener
 import com.verygoodsecurity.vgscollect.core.model.network.VGSRequest
 import com.verygoodsecurity.vgscollect.core.model.network.VGSResponse
+import com.verygoodsecurity.vgscollect.widget.VGSEditText
 
 
 class CollectorManager internal constructor(context: ReactApplicationContext?) : ReactContextBaseJavaModule(context) {
@@ -24,6 +26,26 @@ class CollectorManager internal constructor(context: ReactApplicationContext?) :
       map[name] = VGSCollect(it, vaultId, if (environment == "sandbox") Environment.SANDBOX else Environment.LIVE);
       System.out.println("VGSCollect created ACTIVITY with: name=$name, vaultId=$vaultId, env=$environment");
     }
+  }
+
+  @ReactMethod
+  fun pinConfirm(name: String, callback: Callback) {
+    VGSCollectLogger.logLevel = VGSCollectLogger.Level.WARN;
+    System.out.println("VGSCollect wrapper triggered confirmPin, name=$name");
+
+    val activity: Activity? = currentActivity
+    var isEqual = true
+    if (activity != null) {
+      val pin = activity.findViewById<VGSEditText>(R.id.vgsPin)
+      if (pin != null){
+        val pinConfirm = activity.findViewById<VGSEditText>(R.id.vgsPinConfirm)
+        isEqual = pin.isContentEquals(pinConfirm)
+      }
+    }
+    val map = Arguments.createMap();
+    map.putInt("code", 200);
+    map.putBoolean("data", isEqual);
+    callback.invoke(map);
   }
 
   @ReactMethod

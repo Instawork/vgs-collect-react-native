@@ -15,6 +15,26 @@ class CollectorManager: NSObject {
         
     CollectorManager.map[name] = VGSCollect(id: vaultId, environment: environment);
  }
+  
+    @objc(pinConfirm:resolver:rejecter:)
+    func pinConfirm(_ name: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+      let collector = CollectorManager.map[name]!
+        
+      if (collector == nil) {
+          reject("error", "invalid name", NSError(domain: "MissingCollectorByNameError", code: 401))
+      }
+
+      let pin = collector.getTextField(fieldName: "data.attributes.pin")
+      let pinConfirm = collector.getTextField(fieldName: "data.attributes.pinConfirm")
+      var isEqual = false
+      if pin != nil {
+          let isPinEqual = pin?.isContentEqual(pinConfirm!)
+          isEqual = isPinEqual!
+          resolve(["code": "200", "data": isEqual ]);
+      }
+
+      return
+    }
 
     @objc(submit:path:method:headers:resolver:rejecter:)
     func submit(_ name: String, path: String, method: String, headers: Dictionary<String, String>, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
@@ -23,7 +43,6 @@ class CollectorManager: NSObject {
         
         if (collector == nil) {
             reject("error", "invalid name", NSError(domain: "MissingCollectorByNameError", code: 401))
-            return;
         }
         collector.customHeaders = headers;
     
