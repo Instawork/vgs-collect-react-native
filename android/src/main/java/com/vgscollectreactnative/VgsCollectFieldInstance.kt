@@ -131,7 +131,7 @@ class VgsCollectFieldInstance(context: ThemedReactContext) : LinearLayout(contex
     val rule : VGSInfoRule = VGSInfoRule.ValidationBuilder()
     .setRegex("^[a-zA-Z0-9 ,'.-]+$")
     .setAllowableMinLength(4)
-    .setAllowableMaxLength(6)
+    .setAllowableMaxLength(4)
     .build()
 
     (vgsField as VGSEditText).addRule(rule)
