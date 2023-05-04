@@ -7,6 +7,10 @@ class VgsCollectReactNativeViewManager: RCTViewManager {
   override func view() -> (VgsCollectReactNativeView) {
     return VgsCollectReactNativeView()
   }
+
+  override class func requiresMainQueueSetup() -> Bool {
+    return true
+  }
 } 
 
 class VgsCollectReactNativeView : UIView {
