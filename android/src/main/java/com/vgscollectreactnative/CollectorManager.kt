@@ -95,6 +95,7 @@ class CollectorManager internal constructor(context: ReactApplicationContext?) :
               map.putString("error", response.localizeMessage);
               callback.invoke(map);
             }
+            else -> {}
           }
         }
       });
